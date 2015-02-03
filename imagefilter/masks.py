@@ -11,7 +11,7 @@ class Masks:
         return np.ones((rank, rank)) / (rank ** 2)
 
     def tone(tone):
-        return tone
+        return np.array([[tone]])
 
     sharpen = [
         np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]]),

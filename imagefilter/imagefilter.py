@@ -9,38 +9,30 @@ class ImageFilter:
 
     def lin_trans(self, mask):
         # Mask can be just an integer, handle it
-        if 'numpy' in str(type(mask)):
-            mask_width, mask_height = mask.shape
-        else:
-            mask_width, mask_height = 1, 1
+        mask_width, mask_height = mask.shape if mask.shape else (1, 1)
 
-        # The mask size must be uneven
-        if (mask_width % 2 == 0):
-            raise ValueError("Le dimensioni della maschera devono "
-                             "essere dispari.")
+        # Mask dimensions check
+        if (mask_width % 2 == 0 or mask_width != mask_height):
+            raise ValueError("The mask must be squared and of uneven size.")
 
-        pixels = np.array(self.image)
-        # Copy original pixel array into a new one
-        # to not modify the original
-        new_pixels = np.copy(pixels)
-        half_mask_width, half_mask_height = mask_width // 2, mask_height // 2
+        half_mask_size = mask_width // 2
         image_width, image_height = self.image.size
 
-        for x in range(half_mask_width, image_width - half_mask_width):
-            for y in range(half_mask_height, image_height - half_mask_height):
+        pixels = np.array(self.image)
+
+        # Copy original pixel array into a new one
+        new_pixels = np.copy(pixels)
+
+        for x in range(half_mask_size, image_width - half_mask_size):
+            for y in range(half_mask_size, image_height - half_mask_size):
                 # Extract submatrix of the same size of the mask
-                subm = pixels[y - half_mask_height: y + half_mask_height + 1,
-                              x - half_mask_width:  x + half_mask_width + 1]
+                subm = pixels[y - half_mask_size: y + half_mask_size + 1,
+                              x - half_mask_size:  x + half_mask_size + 1]
 
                 # Compute sum of R,G,B values
-                if mask_width > 1:
-                    red = np.sum(subm[:, :, 0] * mask)
-                    green = np.sum(subm[:, :, 1] * mask)
-                    blue = np.sum(subm[:, :, 2] * mask)
-                else:
-                    red = int(subm[:, :, 0] * mask)
-                    green = int(subm[:, :, 1] * mask)
-                    blue = int(subm[:, :, 2] * mask)
+                red = np.sum(subm[:, :, 0] * mask)
+                green = np.sum(subm[:, :, 1] * mask)
+                blue = np.sum(subm[:, :, 2] * mask)
 
                 # Normalize out-of-scale values
                 if red > 255:
@@ -60,7 +52,10 @@ class ImageFilter:
 
                 new_pixels[y][x] = red, green, blue
 
-        return Image.fromarray(new_pixels)
+        # Crop the image
+        self.image = Image.fromarray(new_pixels[
+            half_mask_size: image_height - half_mask_size,
+            half_mask_size: image_width - half_mask_size])
 
     def median_trans(self, rank):
         # The rank must be uneven
@@ -68,19 +63,24 @@ class ImageFilter:
             raise ValueError("The rank must be odd.")
 
         pixels = np.array(self.image)
-        half_mask_width, half_mask_height = rank // 2, rank // 2
+        new_pixels = np.copy(pixels)
+
+        half_mask_size, half_mask_size = rank // 2, rank // 2
         image_width, image_height = self.image.size
 
-        for x in range(half_mask_width, image_width - half_mask_width):
-            for y in range(half_mask_height, image_height - half_mask_height):
-                subm = pixels[y - half_mask_height: y + half_mask_height + 1,
-                              x - half_mask_width:  x + half_mask_width + 1]
+        for x in range(half_mask_size, image_width - half_mask_size):
+            for y in range(half_mask_size, image_height - half_mask_size):
+                subm = pixels[y - half_mask_size: y + half_mask_size + 1,
+                              x - half_mask_size:  x + half_mask_size + 1]
 
                 # Compute median for each component
                 red = np.median(subm[:, :, 0])
                 green = np.median(subm[:, :, 1])
                 blue = np.median(subm[:, :, 2])
 
-                pixels[y][x] = red, green, blue
+                new_pixels[y][x] = red, green, blue
 
-        return Image.fromarray(pixels)
+        # Crop the image
+        self.image = Image.fromarray(new_pixels[
+            half_mask_size: image_height - half_mask_size,
+            half_mask_size: image_width - half_mask_size])
