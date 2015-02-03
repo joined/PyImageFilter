@@ -11,53 +11,61 @@ from imagefilter.masks import Masks
 from imagefilter.extras import OrderNamespace
 
 if __name__ == "__main__":
-    description = """
-    Toolkit for linear and nonlinear image filtering.
-    LG 2015
-    """
+    description = """Toolkit for linear and nonlinear image filtering.
+                     LG 2015"""
 
     #########################################################
     # CLI arguments definition
     #########################################################
     parser = argparse.ArgumentParser(description=description)
+
     parser.add_argument('input_image',
                         type=str,
                         help='input image filename')
+
     parser.add_argument('-a', '--average',
                         type=int,
                         metavar='RANK',
                         choices=[3, 5, 7, 9],
                         help='average mask')
+
     parser.add_argument('-m', '--median',
                         type=int,
                         metavar='RANK',
                         choices=[3, 5, 7, 9],
                         help='median transform')
+
     parser.add_argument('-t', '--tone',
                         type=float,
                         help='tone mask, must be between 0 and 1')
+
     parser.add_argument('-s', '--sharpen',
                         type=int,
                         metavar='TYPE',
                         choices=[1, 2, 3],
                         help='sharpen transform mask')
+
     parser.add_argument('-p', '--prewitt',
                         type=int,
                         metavar='TYPE',
                         choices=[1, 2],
                         help='prewitt transform mask')
+
     parser.add_argument('-sb', '--sobel',
                         type=int,
                         metavar='TYPE',
                         choices=[1, 2],
                         help='sobel transform mask')
+
     parser.add_argument('-o', '--output',
                         metavar='OUTPUT_IMAGE',
                         default='output_%d.jpg' % randrange(100),
                         help='output image filename')
+
     parser.add_argument('-c', '--custom',
                         metavar='MASK',
                         help='custom mask linear filter, json-style format')
+
     args = parser.parse_args(None, OrderNamespace())
 
     ######################################################################
