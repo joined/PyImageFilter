@@ -13,7 +13,7 @@ $ source .env/bin/activate
 $ pip install -r requirements.txt
 ```
 
-Use:
+Help:
 ```
 $ ./cli.py -h
 usage: cli.py [-h] [-a RANK] [-m RANK] [-t TONE] [-s TYPE] [-p TYPE]
@@ -42,4 +42,17 @@ optional arguments:
                         output image filename
   -c MASK, --custom MASK
                         custom mask transform
+```
+
+Example:
+```
+$ ./cli.py my_image.jpg --sharpen=1 --tone=0.5 --average=5 -o output_image.jpg
+Opening file "my_image.jpg"...
+Image file opened.
+Applying sharpen mask type 1...
+Applying tone mask with tone 0.5...
+Applying average mask with size 5x5...
+Filtering completed.
+Saving file to "output_image.jpg"...
+File saved.
 ```
