@@ -16,32 +16,27 @@ $ pip install -r requirements.txt
 Help:
 ```
 $ ./cli.py -h
-usage: cli.py [-h] [-a RANK] [-m RANK] [-t TONE] [-s TYPE] [-p TYPE]
-              [-sb TYPE] [-o OUTPUT_IMAGE] [-c MASK]
+usage: cli.py [-h] [--average RANK] [--median RANK] [--tone TONE]
+              [--sharpen TYPE] [--prewitt TYPE] [--sobel TYPE]
+              [--output OUTPUT_IMAGE] [--custom MASK]
               input_image
 
-Script for linear and nonlinear image filtering. LG 2015
+Toolkit for linear and nonlinear image filtering. LG 2015
 
 positional arguments:
   input_image           input image filename
 
 optional arguments:
   -h, --help            show this help message and exit
-  -a RANK, --average RANK
-                        average mask
-  -m RANK, --median RANK
-                        median transform
-  -t TONE, --tone TONE  tone mask, must be between 0 and 1
-  -s TYPE, --sharpen TYPE
-                        sharpen transform mask
-  -p TYPE, --prewitt TYPE
-                        prewitt transform mask
-  -sb TYPE, --sobel TYPE
-                        sobel transform mask
-  -o OUTPUT_IMAGE, --output OUTPUT_IMAGE
+  --average RANK        average mask
+  --median RANK         median transform
+  --tone TONE           tone mask, must be between 0 and 1
+  --sharpen TYPE        sharpen transform mask
+  --prewitt TYPE        prewitt transform mask
+  --sobel TYPE          sobel transform mask
+  --output OUTPUT_IMAGE
                         output image filename
-  -c MASK, --custom MASK
-                        custom mask transform
+  --custom MASK         custom mask linear filter, json-style format
 ```
 
 Example:
