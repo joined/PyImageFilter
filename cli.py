@@ -23,46 +23,46 @@ if __name__ == "__main__":
                         type=str,
                         help='input image filename')
 
-    parser.add_argument('-a', '--average',
+    parser.add_argument('--average',
                         type=int,
                         metavar='RANK',
                         choices=[3, 5, 7, 9],
                         help='average mask')
 
-    parser.add_argument('-m', '--median',
+    parser.add_argument('--median',
                         type=int,
                         metavar='RANK',
                         choices=[3, 5, 7, 9],
                         help='median transform')
 
-    parser.add_argument('-t', '--tone',
+    parser.add_argument('--tone',
                         type=float,
                         help='tone mask, must be between 0 and 1')
 
-    parser.add_argument('-s', '--sharpen',
+    parser.add_argument('--sharpen',
                         type=int,
                         metavar='TYPE',
                         choices=[1, 2, 3],
                         help='sharpen transform mask')
 
-    parser.add_argument('-p', '--prewitt',
+    parser.add_argument('--prewitt',
                         type=int,
                         metavar='TYPE',
                         choices=[1, 2],
                         help='prewitt transform mask')
 
-    parser.add_argument('-sb', '--sobel',
+    parser.add_argument('--sobel',
                         type=int,
                         metavar='TYPE',
                         choices=[1, 2],
                         help='sobel transform mask')
 
-    parser.add_argument('-o', '--output',
+    parser.add_argument('--output',
                         metavar='OUTPUT_IMAGE',
                         default='output_%d.jpg' % randrange(100),
                         help='output image filename')
 
-    parser.add_argument('-c', '--custom',
+    parser.add_argument('--custom',
                         metavar='MASK',
                         help='custom mask linear filter, json-style format')
 
