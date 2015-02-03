@@ -15,6 +15,10 @@ if __name__ == "__main__":
     Toolkit for linear and nonlinear image filtering.
     LG 2015
     """
+
+    #########################################################
+    # CLI arguments definition
+    #########################################################
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('input_image',
                         type=str,
@@ -56,6 +60,9 @@ if __name__ == "__main__":
                         help='custom mask linear filter, json-style format')
     args = parser.parse_args(None, OrderNamespace())
 
+    ######################################################################
+    # File opening
+    ######################################################################
     try:
         print('Opening file "{}"...'.format(args.input_image))
         im = Image.open(args.input_image)
@@ -69,6 +76,9 @@ if __name__ == "__main__":
 
     im_f = ImageFilter(im)
 
+    #####################################################################
+    # Filter application
+    #####################################################################
     for arg in ordered_args:
         if arg == 'average':
             print('Applying average mask with size '
@@ -105,6 +115,9 @@ if __name__ == "__main__":
                   '{0}x{0}...'.format(args.median))
             im_f.median_trans(args.median)
 
+    #######################################################################
+    # File saving
+    #######################################################################
     try:
         print('Filtering completed.\nSaving file to "%s"...' % args.output)
         im_f.image.save(args.output)
