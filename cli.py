@@ -3,31 +3,16 @@
 import argparse
 import numpy as np
 import sys
+import json
 from random import randrange
 from PIL import Image
 from imagefilter.imagefilter import ImageFilter
 from imagefilter.masks import Masks
-
-
-class OrderNamespace(argparse.Namespace):
-
-    """
-    Override default Namespace to keep
-    optional arguments order, in order to
-    apply the transformations correctly
-    """
-
-    def __init__(self, **kwargs):
-        self.__dict__['order'] = []
-        super(OrderNamespace, self).__init__(**kwargs)
-
-    def __setattr__(self, attr, value):
-        self.__dict__['order'].append(attr)
-        super(OrderNamespace, self).__setattr__(attr, value)
+from imagefilter.extras import OrderNamespace
 
 if __name__ == "__main__":
     description = """
-    Script for linear and nonlinear image filtering.
+    Toolkit for linear and nonlinear image filtering.
     LG 2015
     """
     parser = argparse.ArgumentParser(description=description)
@@ -68,32 +53,61 @@ if __name__ == "__main__":
                         help='output image filename')
     parser.add_argument('-c', '--custom',
                         metavar='MASK',
-                        help='custom mask transform')
+                        help='custom mask linear filter, json-style format')
     args = parser.parse_args(None, OrderNamespace())
 
     try:
+        print('Opening file "{}"...'.format(args.input_image))
         im = Image.open(args.input_image)
     except FileNotFoundError:
         print('File not found.')
         sys.exit(1)
+    else:
+        print('Image file opened.')
 
     ordered_args = args.order[9:-1]
 
     for arg in ordered_args:
         if arg == 'average':
+            print('Applying average mask with size '
+                  '{0}x{0}...'.format(args.average))
             im = ImageFilter(im).lin_trans(Masks.avg(args.average))
+
         elif arg == 'tone':
+            print('Applying tone mask with tone {}...'.format(args.tone))
             im = ImageFilter(im).lin_trans(Masks.tone(args.tone))
+
         elif arg == 'sharpen':
+            print('Applying sharpen mask type {}...'.format(args.sharpen))
             im = ImageFilter(im).lin_trans(Masks.sharpen[args.sharpen - 1])
+
         elif arg == 'prewitt':
+            print('Applying prewitt mask type {}...'.format(args.prewitt))
             im = ImageFilter(im).lin_trans(Masks.prewitt[args.prewitt - 1])
+
         elif arg == 'sobel':
+            print('Applying sobel mask type {}...'.format(args.sobel))
             im = ImageFilter(im).lin_trans(Masks.sobel[args.sobel - 1])
+
+        elif arg == 'custom':
+            print('Applying custom mask {}'.format(args.custom))
+            try:
+                mask = np.array(json.loads(args.custom))
+            except ValueError:
+                print('Error loading custom mask, skipped step.')
+            else:
+                im = ImageFilter(im).lin_trans(mask)
+
         elif arg == 'median':
+            print('Applying median filter with size '
+                  '{0}x{0}...'.format(args.sharpen))
             im = ImageFilter(im).median_trans(args.median)
 
     try:
+        print('Filtering completed.\nSaving file to "%s"...' % args.output)
         im.save(args.output)
     except IOError:
         print('Error saving file.')
+        sys.exit(1)
+    else:
+        print('File saved.')
