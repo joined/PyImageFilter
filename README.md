@@ -41,7 +41,7 @@ optional arguments:
 
 Example:
 ```
-$ ./cli.py my_image.jpg --sharpen=1 --tone=0.5 --average=5 -o output_image.jpg
+$ ./cli.py my_image.jpg --sharpen=1 --tone=0.5 --average=5 --output=output_image.jpg
 Opening file "my_image.jpg"...
 Image file opened.
 Applying sharpen mask type 1...
