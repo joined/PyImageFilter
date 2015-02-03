@@ -21,41 +21,47 @@ if __name__ == "__main__":
 
     parser.add_argument('input_image',
                         type=str,
-                        help='input image filename')
+                        help='Input image file name.')
 
     parser.add_argument('--average',
                         type=int,
                         metavar='RANK',
                         choices=[3, 5, 7, 9],
-                        help='average mask')
+                        help='average mask transform. available ranks '
+                             '3,5,7,9')
 
     parser.add_argument('--median',
                         type=int,
                         metavar='RANK',
                         choices=[3, 5, 7, 9],
-                        help='median transform')
+                        help='median mask transform. available ranks '
+                             '3,5,7,9')
 
     parser.add_argument('--tone',
                         type=float,
-                        help='tone mask, must be between 0 and 1')
+                        help='tone mask transform. value between 0 and '
+                             '1')
 
     parser.add_argument('--sharpen',
                         type=int,
                         metavar='TYPE',
                         choices=[1, 2, 3],
-                        help='sharpen transform mask')
+                        help='sharpen mask transform. available types '
+                             '1,2,3')
 
     parser.add_argument('--prewitt',
                         type=int,
                         metavar='TYPE',
                         choices=[1, 2],
-                        help='prewitt transform mask')
+                        help='prewitt mask transform. available types '
+                             '1,2')
 
     parser.add_argument('--sobel',
                         type=int,
                         metavar='TYPE',
                         choices=[1, 2],
-                        help='sobel transform mask')
+                        help='sobel mask transform. available types '
+                             '1,2')
 
     parser.add_argument('--output',
                         metavar='OUTPUT_IMAGE',
