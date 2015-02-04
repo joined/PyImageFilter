@@ -29,10 +29,11 @@ class ImageFilter:
                 subm = pixels[y - half_mask_size: y + half_mask_size + 1,
                               x - half_mask_size:  x + half_mask_size + 1]
 
-                # Compute sum of R,G,B values
-                red = np.sum(subm[:, :, 0] * mask)
-                green = np.sum(subm[:, :, 1] * mask)
-                blue = np.sum(subm[:, :, 2] * mask)
+                # Compute R,G,B values flattening matrices
+                # to use dot product in order to improve speed
+                red = np.dot(subm[:, :, 0].flatten(), mask.flatten())
+                green = np.dot(subm[:, :, 1].flatten(), mask.flatten())
+                blue = np.dot(subm[:, :, 2].flatten(), mask.flatten())
 
                 # Normalize out-of-scale values
                 if red > 255:
