@@ -16,38 +16,37 @@ $ pip install -r requirements.txt
 Help:
 ```
 $ ./cli.py -h
-usage: cli.py [-h] [--average RANK] [--median RANK] [--tone TONE]
-              [--sharpen TYPE] [--prewitt TYPE] [--sobel TYPE]
-              [--output OUTPUT_IMAGE] [--custom MASK]
+usage: cli.py [-h] [--median RANK] [--average RANK] [--gauss STDEV,RANK]
+              [--tone TONE] [--sharpen TYPE] [--prewitt TYPE] [--sobel TYPE]
+              [--custom MASK] [--output OUTPUT_IMAGE]
               input_image
 
-Toolkit for linear and nonlinear image filtering. LG 2015
+Toolkit for linear and nonlinear image filtering
 
 positional arguments:
-  input_image           input image filename
+  input_image           Input image file name.
 
 optional arguments:
   -h, --help            show this help message and exit
-  --average RANK        average mask
-  --median RANK         median transform
-  --tone TONE           tone mask, must be between 0 and 1
-  --sharpen TYPE        sharpen transform mask
-  --prewitt TYPE        prewitt transform mask
-  --sobel TYPE          sobel transform mask
+  --median RANK         median transform. rank must be unven
+  --average RANK        average mask transform. rank must be unven
+  --gauss STDEV,RANK    gauss average transform. rank must be uneven
+  --tone TONE           tone mask transform. value between 0 and 1
+  --sharpen TYPE        sharpen mask transform. available types 1,2,3
+  --prewitt TYPE        prewitt mask transform. available types 1,2
+  --sobel TYPE          sobel mask transform. available types 1,2
+  --custom MASK         custom mask linear filter, json-style format
   --output OUTPUT_IMAGE
                         output image filename
-  --custom MASK         custom mask linear filter, json-style format
 ```
 
 Example:
 ```
-$ ./cli.py my_image.jpg --sharpen=1 --tone=0.5 --average=5 --output=output_image.jpg
-Opening file "my_image.jpg"...
-Image file opened.
-Applying sharpen mask type 1...
-Applying tone mask with tone 0.5...
-Applying average mask with size 5x5...
-Filtering completed.
-Saving file to "output_image.jpg"...
-File saved.
+$ ./cli.py image.jpg --gauss 2,5 --output output_image.jpg
+> Opening file "image.jpg"...
+> Image file opened.
+> Applying Gauss filter with stdev 2.0 and size 5x5...
+> Filtering completed.
+> Saving file to "output_image.jpg"...
+> File saved.
 ```
