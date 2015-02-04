@@ -11,10 +11,6 @@ class ImageFilter:
         # Mask can be just an integer, handle it
         mask_width, mask_height = mask.shape if mask.shape else (1, 1)
 
-        # Mask dimensions check
-        if (mask_width % 2 == 0 or mask_width != mask_height):
-            raise ValueError("The mask must be squared and of uneven size.")
-
         half_mask_size = mask_width // 2
         image_width, image_height = self.image.size
 
@@ -59,10 +55,6 @@ class ImageFilter:
             half_mask_size: image_width - half_mask_size])
 
     def median_trans(self, rank):
-        # The rank must be uneven
-        if (rank % 2 == 0):
-            raise ValueError("The rank must be odd.")
-
         pixels = np.array(self.image)
         new_pixels = np.copy(pixels)
 

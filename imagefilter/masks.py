@@ -1,14 +1,30 @@
 import numpy as np
+import math
 
 
 class Masks:
 
-    def avg(rank):
-        if (rank % 2 == 0):
-            raise ValueError("The rank must be odd.")
+    @staticmethod
+    def gauss(stdev, rank):
+        def gaussian_f(r):
+            num = math.e ** (- (r ** 2) / (2 * (stdev ** 2)))
+            den = stdev * math.sqrt(2 * math.pi)
 
+            return num / den
+
+        mask = np.fromfunction(
+            lambda x, y: gaussian_f(abs(x - rank // 2) + abs(y - rank // 2)),
+            (rank, rank),
+            dtype=float)
+
+        # Normalize mask to have unitary sum of elements
+        return mask / np.sum(mask)
+
+    @staticmethod
+    def avg(rank):
         return np.ones((rank, rank)) / (rank ** 2)
 
+    @staticmethod
     def tone(tone):
         return np.array([[tone]])
 
