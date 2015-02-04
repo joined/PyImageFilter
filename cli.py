@@ -7,42 +7,9 @@ from PIL import Image
 from random import randrange
 from imagefilter.imagefilter import ImageFilter
 from imagefilter.masks import Masks
-from imagefilter.extras import OrderNamespace
+from imagefilter.clitools import OrderNamespace, CustomArgTypes
 
 if __name__ == "__main__":
-    ##########################################################
-    # Custom argument types definition
-    ##########################################################
-    def custom_mask_type(string):
-        try:
-            mask = np.array(json.loads(string))
-        except:
-            raise argparse.ArgumentTypeError('Invalid custom mask.')
-        else:
-            if (mask.shape[0] != mask.shape[1] or
-                    mask.shape[0] % 2 == 0):
-                raise argparse.ArgumentTypeError(
-                    'Custom mask must be squared and of uneven size')
-            return mask
-
-    def gauss_filter_type(string):
-        try:
-            stdev = float(string.split(',')[0])
-            rank = int(string.split(',')[1])
-        except:
-            raise argparse.ArgumentTypeError('Invalid gauss filter arguments.')
-        else:
-            if (rank % 2 == 0):
-                raise argparse.ArgumentTypeError('Gauss filter rank must'
-                                                 'be uneven.')
-            return stdev, rank
-
-    def mask_rank_type(string):
-        rank = int(string)
-        if (rank % 2 == 0):
-            raise argparse.ArgumentTypeError('Rank must be uneven.')
-        return rank
-
     #########################################################
     # CLI arguments definition
     #########################################################
@@ -54,7 +21,7 @@ if __name__ == "__main__":
                         help='Input image file name.')
 
     parser.add_argument('--median',
-                        type=mask_rank_type,
+                        type=CustomArgTypes.rank,
                         metavar='RANK',
                         help='median transform. rank must be unven')
 
@@ -64,7 +31,7 @@ if __name__ == "__main__":
                         help='average mask transform. rank must be unven')
 
     parser.add_argument('--gauss',
-                        type=gauss_filter_type,
+                        type=CustomArgTypes.gauss_filter,
                         metavar='STDEV,RANK',
                         help='gauss average transform. rank must be uneven')
 
@@ -94,7 +61,7 @@ if __name__ == "__main__":
                              '1,2')
 
     parser.add_argument('--custom',
-                        type=custom_mask_type,
+                        type=CustomArgTypes.custom_mask,
                         metavar='MASK',
                         help='custom mask linear filter, json-style format')
 
