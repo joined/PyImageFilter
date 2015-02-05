@@ -84,7 +84,7 @@ if __name__ == "__main__":
     else:
         print('> Image file opened.')
 
-    ordered_args = args.order[11:-1]
+    ordered_args = args.order[10:]
 
     im_f = ImageFilter(im)
 
@@ -114,8 +114,8 @@ if __name__ == "__main__":
             im_f.lin_trans(Masks.sobel[args.sobel - 1])
 
         elif arg == 'custom':
-            print('> Applying custom mask {}'.format(args.custom))
-            im_f.lin_trans(mask)
+            print('> Applying custom mask\n{}'.format(args.custom))
+            im_f.lin_trans(args.custom)
 
         elif arg == 'gauss':
             print('> Applying Gauss filter with '

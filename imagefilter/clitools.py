@@ -1,4 +1,5 @@
 import argparse
+import json
 import numpy as np
 
 
@@ -26,7 +27,8 @@ class CustomArgTypes:
         except:
             raise argparse.ArgumentTypeError('Invalid custom mask.')
         else:
-            if (mask.shape[0] != mask.shape[1] or
+            if (len(mask.shape) != 2 or
+                    mask.shape[0] != mask.shape[1] or
                     mask.shape[0] % 2 == 0):
                 raise argparse.ArgumentTypeError(
                     'Custom mask must be squared and of uneven size')

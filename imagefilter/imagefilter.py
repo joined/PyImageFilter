@@ -9,7 +9,7 @@ class ImageFilter:
 
     def lin_trans(self, mask):
         # Mask can be just an integer, handle it
-        mask_width, mask_height = mask.shape if mask.shape else (1, 1)
+        mask_width, mask_height = mask.shape
 
         half_mask_size = mask_width // 2
         image_width, image_height = self.image.size
