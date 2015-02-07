@@ -5,8 +5,8 @@ import sys
 import json
 from PIL import Image
 from random import randrange
-from imagefilter.imagefilter import ImageFilter
-from imagefilter.masks import Masks
+from imagefilter import masks
+from imagefilter.core import ImageFilter
 from imagefilter.clitools import OrderNamespace, CustomArgTypes
 
 if __name__ == "__main__":
@@ -26,7 +26,7 @@ if __name__ == "__main__":
                         help='median transform. rank must be unven')
 
     parser.add_argument('--average',
-                        type=int,
+                        type=CustomArgTypes.rank,
                         metavar='RANK',
                         help='average mask transform. rank must be unven')
 
@@ -95,23 +95,23 @@ if __name__ == "__main__":
         if arg == 'average':
             print('> Applying average mask with size '
                   '{0}x{0}...'.format(args.average))
-            im_f.lin_trans(Masks.avg(args.average))
+            im_f.lin_trans(masks.avg(args.average))
 
         elif arg == 'tone':
             print('> Applying tone mask with tone {}...'.format(args.tone))
-            im_f.lin_trans(Masks.tone(args.tone))
+            im_f.lin_trans(masks.tone(args.tone))
 
         elif arg == 'sharpen':
             print('> Applying sharpen mask type {}...'.format(args.sharpen))
-            im_f.lin_trans(Masks.sharpen[args.sharpen - 1])
+            im_f.lin_trans(masks.sharpen[args.sharpen - 1])
 
         elif arg == 'prewitt':
             print('> Applying prewitt mask type {}...'.format(args.prewitt))
-            im_f.lin_trans(Masks.prewitt[args.prewitt - 1])
+            im_f.lin_trans(masks.prewitt[args.prewitt - 1])
 
         elif arg == 'sobel':
             print('> Applying sobel mask type {}...'.format(args.sobel))
-            im_f.lin_trans(Masks.sobel[args.sobel - 1])
+            im_f.lin_trans(masks.sobel[args.sobel - 1])
 
         elif arg == 'custom':
             print('> Applying custom mask\n{}'.format(args.custom))
@@ -120,7 +120,7 @@ if __name__ == "__main__":
         elif arg == 'gauss':
             print('> Applying Gauss filter with '
                   'stdev {0} and size {1}x{1}...'.format(*args.gauss))
-            im_f.lin_trans(Masks.gauss(*args.gauss))
+            im_f.lin_trans(masks.gauss(*args.gauss))
 
         elif arg == 'median':
             print('> Applying median filter with size '
