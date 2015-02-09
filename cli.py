@@ -79,7 +79,7 @@ if __name__ == "__main__":
     else:
         print('> Image file opened.')
 
-    ordered_args = args.order[10:]
+    ordered_args = args.order[9:]
 
     im_f = ImageFilter(im)
 

@@ -11,16 +11,16 @@ class ImageFilter:
     @staticmethod
     def lin_calc_px(xy, pixels, half_mask_size, mask):
         # Unpack x, y from tuple xy
-        y, x = xy
+        x, y = xy
 
         # If we are on the border, return 0
-        if (x < half_mask_size or x >= pixels.shape[1] - half_mask_size or
-                y < half_mask_size or y >= pixels.shape[0] - half_mask_size):
+        if (x < half_mask_size or x >= pixels.shape[0] - half_mask_size or
+                y < half_mask_size or y >= pixels.shape[1] - half_mask_size):
             return 0, 0, 0
 
         # Extract submatrix of the same size of the mask
-        subm = pixels[y - half_mask_size: y + half_mask_size + 1,
-                      x - half_mask_size:  x + half_mask_size + 1]
+        subm = pixels[x - half_mask_size: x + half_mask_size + 1,
+                      y - half_mask_size:  y + half_mask_size + 1]
 
         # Compute R,G,B values flattening matrices
         # to use dot product in order to improve speed
@@ -44,7 +44,6 @@ class ImageFilter:
         elif blue < 0:
             blue = 0
 
-        # print("{} -> {}".format(xy, (red, green, blue)))
         return red, green, blue
 
     def lin_trans(self, mask):
@@ -63,11 +62,10 @@ class ImageFilter:
                                                half_mask_size=half_mask_size,
                                                mask=mask)
 
-        # Create matrix with coordinates, on which we will iterate
-        coords = np.empty((image_height, image_width, 2))
+        # Create array on which we will iterate
+        coords = np.empty((image_height, image_width, 2), dtype=np.intp)
         coords[..., 0] = np.arange(image_height)[:, None]
         coords[..., 1] = np.arange(image_width)
-        # Flatten coordinates matrix to iterate over it
         flattened_coords = coords.reshape(image_width * image_height, 2)
 
         new_pixels = np.array(list(map(partialized_new_px, flattened_coords)),
