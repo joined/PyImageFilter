@@ -16,9 +16,9 @@ $ pip install -r requirements.txt
 Help:
 ```
 $ ./cli.py -h
-usage: cli.py [-h] [--median RANK] [--average RANK] [--gauss STDEV,RANK]
-              [--tone TONE] [--sharpen TYPE] [--prewitt TYPE] [--sobel TYPE]
-              [--custom MASK] [--output OUTPUT_IMAGE]
+usage: cli.py [-h] [--average RANK] [--gauss STDEV,RANK] [--tone TONE]
+              [--sharpen TYPE] [--prewitt TYPE] [--sobel TYPE] [--custom MASK]
+              [--output OUTPUT_IMAGE]
               input_image
 
 Toolkit for linear and nonlinear image filtering
@@ -28,7 +28,6 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  --median RANK         median transform. rank must be unven
   --average RANK        average mask transform. rank must be unven
   --gauss STDEV,RANK    gauss average transform. rank must be uneven
   --tone TONE           tone mask transform. value between 0 and 1
