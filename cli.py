@@ -20,11 +20,6 @@ if __name__ == "__main__":
                         type=str,
                         help='Input image file name.')
 
-    parser.add_argument('--median',
-                        type=CustomArgTypes.rank,
-                        metavar='RANK',
-                        help='median transform. rank must be unven')
-
     parser.add_argument('--average',
                         type=CustomArgTypes.rank,
                         metavar='RANK',
@@ -121,11 +116,6 @@ if __name__ == "__main__":
             print('> Applying Gauss filter with '
                   'stdev {0} and size {1}x{1}...'.format(*args.gauss))
             im_f.lin_trans(masks.gauss(*args.gauss))
-
-        elif arg == 'median':
-            print('> Applying median filter with size '
-                  '{0}x{0}...'.format(args.median))
-            im_f.median_trans(args.median)
 
     #######################################################################
     # File saving
