@@ -21,6 +21,13 @@ class OrderNamespace(argparse.Namespace):
 
 
 class CustomArgTypes:
+
+    """
+    Define custom argument types
+    to check input sanity
+    """
+
+    @staticmethod
     def custom_mask(string):
         try:
             mask = np.array(json.loads(string))
@@ -34,6 +41,7 @@ class CustomArgTypes:
                     'Custom mask must be squared and of uneven size')
             return mask
 
+    @staticmethod
     def gauss_filter(string):
         try:
             stdev = float(string.split(',')[0])
@@ -46,6 +54,7 @@ class CustomArgTypes:
                                                  'be uneven.')
             return stdev, rank
 
+    @staticmethod
     def rank(string):
         rank = int(string)
         if (rank % 2 == 0):
