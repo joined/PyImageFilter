@@ -55,6 +55,10 @@ if __name__ == "__main__":
                         help='sobel mask transform. available types '
                              '1,2')
 
+    parser.add_argument('--noparallel',
+                        action='store_true',
+                        help='disable parallel execution')
+
     parser.add_argument('--custom',
                         type=CustomArgTypes.custom_mask,
                         metavar='MASK',
@@ -81,7 +85,10 @@ if __name__ == "__main__":
 
     ordered_args = args.order[9:]
 
-    im_f = ImageFilter(im)
+    if args.noparallel:
+        im_f = ImageFilter(im, parallel=False)
+    else:
+        im_f = ImageFilter(im, parallel=True)
 
     #####################################################################
     # Filter application

@@ -1,55 +1,56 @@
 import functools
+import multiprocessing
 import numpy as np
-from concurrent.futures import ThreadPoolExecutor
+from itertools import starmap
 from PIL import Image
+
+
+# For some reason this function must be outside the class
+# in order to be pickled
+def lin_calc_px(x, y, pixels, half_mask_size, mask):
+    """
+    Calculates the new color of a single pixel,
+    given the mask to use, and the pixel position.
+    """
+    # If we are on the border, return 0
+    if (x < half_mask_size or x >= pixels.shape[0] - half_mask_size or
+            y < half_mask_size or y >= pixels.shape[1] - half_mask_size):
+        return 0, 0, 0
+
+    # Extract submatrix of the same size of the mask
+    subm = pixels[x - half_mask_size: x + half_mask_size + 1,
+                  y - half_mask_size:  y + half_mask_size + 1]
+
+    # Compute R,G,B values flattening matrices
+    # to use dot product in order to improve speed
+    red = int(np.dot(subm[:, :, 0].flatten(), mask.flatten()))
+    green = int(np.dot(subm[:, :, 1].flatten(), mask.flatten()))
+    blue = int(np.dot(subm[:, :, 2].flatten(), mask.flatten()))
+
+    # Normalize out-of-scale values
+    if red > 255:
+        red = 255
+    elif red < 0:
+        red = 0
+
+    if green > 255:
+        green = 255
+    elif green < 0:
+        green = 0
+
+    if blue > 255:
+        blue = 255
+    elif blue < 0:
+        blue = 0
+
+    return red, green, blue
 
 
 class ImageFilter:
 
-    def __init__(self, image):
+    def __init__(self, image, parallel=True):
         self.image = image
-
-    @staticmethod
-    def lin_calc_px(xy, pixels, half_mask_size, mask):
-        """
-        Calculates the new color of a single pixel,
-        given the mask to use, and the pixel position.
-        """
-        # Unpack x, y from tuple xy
-        x, y = xy
-
-        # If we are on the border, return 0
-        if (x < half_mask_size or x >= pixels.shape[0] - half_mask_size or
-                y < half_mask_size or y >= pixels.shape[1] - half_mask_size):
-            return 0, 0, 0
-
-        # Extract submatrix of the same size of the mask
-        subm = pixels[x - half_mask_size: x + half_mask_size + 1,
-                      y - half_mask_size:  y + half_mask_size + 1]
-
-        # Compute R,G,B values flattening matrices
-        # to use dot product in order to improve speed
-        red = int(np.dot(subm[:, :, 0].flatten(), mask.flatten()))
-        green = int(np.dot(subm[:, :, 1].flatten(), mask.flatten()))
-        blue = int(np.dot(subm[:, :, 2].flatten(), mask.flatten()))
-
-        # Normalize out-of-scale values
-        if red > 255:
-            red = 255
-        elif red < 0:
-            red = 0
-
-        if green > 255:
-            green = 255
-        elif green < 0:
-            green = 0
-
-        if blue > 255:
-            blue = 255
-        elif blue < 0:
-            blue = 0
-
-        return red, green, blue
+        self.parallel = parallel
 
     def lin_trans(self, mask):
         """
@@ -66,21 +67,28 @@ class ImageFilter:
         pixels = np.array(self.image)
 
         # Partialize constant arguments of new pixel function
-        partialized_new_px = functools.partial(self.lin_calc_px,
+        partialized_new_px = functools.partial(lin_calc_px,
                                                pixels=pixels,
                                                half_mask_size=half_mask_size,
                                                mask=mask)
 
-        # Create array on which we will iterate
-        coords = np.empty((image_height, image_width, 2), dtype=np.intp)
-        coords[..., 0] = np.arange(image_height)[:, None]
-        coords[..., 1] = np.arange(image_width)
-        flattened_coords = coords.reshape(image_width * image_height, 2)
+        # Create iterator to use in parallel map
+        coords = ((x, y)
+                  for x in range(image_height)
+                  for y in range(image_width))
 
-        pool = ThreadPoolExecutor(image_width)
+        if self.parallel:
+            # Create process pool
+            pool = multiprocessing.Pool(4)
 
-        map_result = pool.map(partialized_new_px, flattened_coords)
+            # Run parallel map unpacking coord tuple
+            map_result = pool.starmap(partialized_new_px, coords)
+        else:
+            # Run map unpacking coord tuple
+            map_result = starmap(partialized_new_px, coords)
 
+        # Transform map result to array, reshaping it
+        # to the same size of the original pixels array
         new_pixels = np.array(list(map_result),
                               dtype='uint8').reshape(pixels.shape)
 
