@@ -10,6 +10,10 @@ class ImageFilter:
 
     @staticmethod
     def lin_calc_px(xy, pixels, half_mask_size, mask):
+        """
+        Calculates the new color of a single pixel,
+        given the mask to use, and the pixel position.
+        """
         # Unpack x, y from tuple xy
         x, y = xy
 
@@ -47,6 +51,10 @@ class ImageFilter:
         return red, green, blue
 
     def lin_trans(self, mask):
+        """
+        Applies a linear filter to the current image object,
+        given the mask to apply
+        """
         # Mask can be just an integer, handle it
         mask_width, mask_height = mask.shape
 
