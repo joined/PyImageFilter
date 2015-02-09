@@ -1,5 +1,6 @@
 import functools
 import numpy as np
+from concurrent.futures import ThreadPoolExecutor
 from PIL import Image
 
 
@@ -76,7 +77,11 @@ class ImageFilter:
         coords[..., 1] = np.arange(image_width)
         flattened_coords = coords.reshape(image_width * image_height, 2)
 
-        new_pixels = np.array(list(map(partialized_new_px, flattened_coords)),
+        pool = ThreadPoolExecutor(image_width)
+
+        map_result = pool.map(partialized_new_px, flattened_coords)
+
+        new_pixels = np.array(list(map_result),
                               dtype='uint8').reshape(pixels.shape)
 
         # Crop the image
