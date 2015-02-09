@@ -16,9 +16,9 @@ $ pip install -r requirements.txt
 Help:
 ```
 $ ./cli.py -h
-usage: cli.py [-h] [--average RANK] [--gauss STDEV,RANK] [--tone TONE]
-              [--sharpen TYPE] [--prewitt TYPE] [--sobel TYPE] [--custom MASK]
-              [--output OUTPUT_IMAGE]
+sage: cli.py [-h] [--average RANK] [--gauss STDEV,RANK] [--tone TONE]
+              [--sharpen TYPE] [--prewitt TYPE] [--sobel TYPE] [--noparallel]
+              [--custom MASK] [--output OUTPUT_IMAGE]
               input_image
 
 Toolkit for linear and nonlinear image filtering
@@ -34,6 +34,7 @@ optional arguments:
   --sharpen TYPE        sharpen mask transform. available types 1,2,3
   --prewitt TYPE        prewitt mask transform. available types 1,2
   --sobel TYPE          sobel mask transform. available types 1,2
+  --noparallel          disable parallel execution
   --custom MASK         custom mask linear filter, json-style format
   --output OUTPUT_IMAGE
                         output image filename
