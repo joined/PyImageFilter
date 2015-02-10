@@ -23,9 +23,9 @@ def lin_calc_px(x, y, pixels, half_mask_size, mask):
 
     # Compute R,G,B values flattening matrices
     # to use dot product in order to improve speed
-    red = int(np.dot(subm[:, :, 0].flatten(), mask.flatten()))
-    green = int(np.dot(subm[:, :, 1].flatten(), mask.flatten()))
-    blue = int(np.dot(subm[:, :, 2].flatten(), mask.flatten()))
+    red = int(np.dot(subm[:, :, 0].ravel(), mask.ravel()))
+    green = int(np.dot(subm[:, :, 1].ravel(), mask.ravel()))
+    blue = int(np.dot(subm[:, :, 2].ravel(), mask.ravel()))
 
     # Normalize out-of-scale values
     if red > 255:
