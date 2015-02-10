@@ -55,14 +55,19 @@ if __name__ == "__main__":
                         help='sobel mask transform. available types '
                              '1,2')
 
-    parser.add_argument('--noparallel',
-                        action='store_true',
-                        help='disable parallel execution')
+    parser.add_argument('--volterra',
+                        type=CustomArgTypes.volterra,
+                        metavar='COEFFICIENT_FILE',
+                        help='quadratic volterra filtering. file must be json')
 
     parser.add_argument('--custom',
                         type=CustomArgTypes.custom_mask,
                         metavar='MASK',
                         help='custom mask linear filter, json-style format')
+
+    parser.add_argument('--noparallel',
+                        action='store_true',
+                        help='disable parallel execution')
 
     parser.add_argument('--output',
                         metavar='OUTPUT_IMAGE',
@@ -83,7 +88,7 @@ if __name__ == "__main__":
     else:
         print('> Image file opened.')
 
-    ordered_args = args.order[9:]
+    ordered_args = args.order[10:]
 
     if args.noparallel:
         im_f = ImageFilter(im, parallel=False)
@@ -115,14 +120,19 @@ if __name__ == "__main__":
             print('> Applying sobel mask type {}...'.format(args.sobel))
             im_f.lin_trans(masks.sobel[args.sobel - 1])
 
-        elif arg == 'custom':
-            print('> Applying custom mask\n{}'.format(args.custom))
-            im_f.lin_trans(args.custom)
-
         elif arg == 'gauss':
             print('> Applying Gauss filter with '
                   'stdev {0} and size {1}x{1}...'.format(*args.gauss))
             im_f.lin_trans(masks.gauss(*args.gauss))
+
+        elif arg == 'volterra':
+            print('> Applying Volterra filter with coefficients\n'
+                  'A:\n{}\nB:\n{}'.format(*args.volterra))
+            im_f.volterra_trans(*args.volterra)
+
+        elif arg == 'custom':
+            print('> Applying custom mask\n{}'.format(args.custom))
+            im_f.lin_trans(args.custom)
 
     #######################################################################
     # File saving

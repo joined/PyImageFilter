@@ -31,15 +31,37 @@ class CustomArgTypes:
     def custom_mask(string):
         try:
             mask = np.array(json.loads(string))
+            # The mask must have 2 dimensions
+            assert len(mask.shape) == 2
+            # It must be squared
+            assert mask.shape[0] == mask.shape[1]
+            # It must be of uneven size
+            assert mask.shape[0] % 2 != 0
         except:
             raise argparse.ArgumentTypeError('Invalid custom mask.')
         else:
-            if (len(mask.shape) != 2 or
-                    mask.shape[0] != mask.shape[1] or
-                    mask.shape[0] % 2 == 0):
-                raise argparse.ArgumentTypeError(
-                    'Custom mask must be squared and of uneven size')
             return mask
+
+    @staticmethod
+    def volterra(string):
+        try:
+            with open(string) as json_file:
+                json_data = json.load(json_file)
+            A = np.array(json_data['A'])
+            B = np.array(json_data['B'])
+            # The A array must have 2 dimensions
+            assert len(A.shape) == 2
+            # The B array must have 4 dimensions
+            assert len(B.shape) == 4
+            # The arrays A and B must be "squared"
+            assert A.shape[0] == A.shape[1] == B.shape[0]
+            assert B.shape[0] == B.shape[1] == B.shape[2] == B.shape[3]
+            # The arrays size must be uneven
+            assert A.shape[0] % 2 != 0
+        except:
+            raise argparse.ArgumentTypeError('Invalid coefficients file.')
+        else:
+            return A, B
 
     @staticmethod
     def gauss_filter(string):
