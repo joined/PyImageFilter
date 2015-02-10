@@ -3,7 +3,10 @@ import math
 
 
 def gauss(stdev, rank):
+    """Creates Gauss average mask given stdev and rank"""
+
     def gaussian_f(r):
+        """Gaussian function"""
         num = math.e ** (- (r ** 2) / (2 * (stdev ** 2)))
         den = stdev * math.sqrt(2 * math.pi)
 
@@ -19,12 +22,10 @@ def gauss(stdev, rank):
 
 
 def avg(rank):
+    """Creates Average mask given rank"""
     return np.ones((rank, rank)) / (rank ** 2)
 
-
-def tone(tone):
-    return np.array([[tone]])
-
+# Commonly used masks for convenience
 sharpen = [
     np.array([[0,  -1,  0],
               [-1,  5, -1],

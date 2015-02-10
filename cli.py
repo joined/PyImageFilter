@@ -2,7 +2,6 @@
 
 import argparse
 import sys
-import json
 from PIL import Image
 from random import randrange
 from imagefilter import masks
@@ -29,10 +28,6 @@ if __name__ == "__main__":
                         type=CustomArgTypes.gauss_filter,
                         metavar='STDEV,RANK',
                         help='gauss average transform. rank must be uneven')
-
-    parser.add_argument('--tone',
-                        type=float,
-                        help='tone mask transform. value between 0 and 1')
 
     parser.add_argument('--sharpen',
                         type=int,
@@ -65,10 +60,11 @@ if __name__ == "__main__":
                         metavar='MASK',
                         help='custom mask linear filter, json-style format')
 
-    parser.add_argument('--noparallel',
+    parser.add_argument('--no-parallel',
                         action='store_true',
                         help='disable parallel execution')
 
+    # If no output was specified, generate a pseudo-random filename
     parser.add_argument('--output',
                         metavar='OUTPUT_IMAGE',
                         default='output_%d.jpg' % randrange(100),
@@ -88,12 +84,10 @@ if __name__ == "__main__":
     else:
         print('> Image file opened.')
 
+    # Filter out elements which were added in the arguments definition
     ordered_args = args.order[10:]
 
-    if args.noparallel:
-        im_f = ImageFilter(im, parallel=False)
-    else:
-        im_f = ImageFilter(im, parallel=True)
+    im_f = ImageFilter(im, parallel=(not args.no_parallel))
 
     #####################################################################
     # Filter application
@@ -103,10 +97,6 @@ if __name__ == "__main__":
             print('> Applying average mask with size '
                   '{0}x{0}...'.format(args.average))
             im_f.lin_trans(masks.avg(args.average))
-
-        elif arg == 'tone':
-            print('> Applying tone mask with tone {}...'.format(args.tone))
-            im_f.lin_trans(masks.tone(args.tone))
 
         elif arg == 'sharpen':
             print('> Applying sharpen mask type {}...'.format(args.sharpen))

@@ -6,9 +6,9 @@ import numpy as np
 class OrderNamespace(argparse.Namespace):
 
     """
-    Override default Namespace to keep
-    optional arguments order, in order to
-    apply the transformations correctly
+    Override default arguments Namespace to keep
+    optional arguments order, to be able to apply
+    multiple filters in the right order
     """
 
     def __init__(self, **kwargs):
@@ -53,9 +53,10 @@ class CustomArgTypes:
             assert len(A.shape) == 2
             # The B array must have 4 dimensions
             assert len(B.shape) == 4
-            # The arrays A and B must be "squared"
-            assert A.shape[0] == A.shape[1] == B.shape[0]
-            assert B.shape[0] == B.shape[1] == B.shape[2] == B.shape[3]
+            # The arrays A and B must be "squared", and have the same
+            # "dimension size"
+            assert A.shape[0] == A.shape[1] == B.shape[0] == B.shape[1] \
+                              == B.shape[2] == B.shape[3]
             # The arrays size must be uneven
             assert A.shape[0] % 2 != 0
         except:
@@ -66,14 +67,14 @@ class CustomArgTypes:
     @staticmethod
     def gauss_filter(string):
         try:
+            # Extract stdev and rank from arguments
             stdev = float(string.split(',')[0])
             rank = int(string.split(',')[1])
+            # Rank must be uneven
+            assert rank % 2 != 0
         except:
             raise argparse.ArgumentTypeError('Invalid gauss filter arguments.')
         else:
-            if (rank % 2 == 0):
-                raise argparse.ArgumentTypeError('Gauss filter rank must'
-                                                 'be uneven.')
             return stdev, rank
 
     @staticmethod
