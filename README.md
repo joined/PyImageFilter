@@ -16,9 +16,9 @@ $ pip install -r requirements.txt
 Help:
 ```
 $ ./cli.py -h
-sage: cli.py [-h] [--average RANK] [--gauss STDEV,RANK] [--tone TONE]
-              [--sharpen TYPE] [--prewitt TYPE] [--sobel TYPE] [--noparallel]
-              [--custom MASK] [--output OUTPUT_IMAGE]
+usage: cli.py [-h] [--average RANK] [--gauss STDEV,RANK] [--sharpen TYPE]
+              [--prewitt TYPE] [--sobel TYPE] [--volterra COEFFICIENT_FILE]
+              [--custom MASK] [--no-parallel] [--output OUTPUT_IMAGE]
               input_image
 
 Toolkit for linear and nonlinear image filtering
@@ -30,12 +30,13 @@ optional arguments:
   -h, --help            show this help message and exit
   --average RANK        average mask transform. rank must be unven
   --gauss STDEV,RANK    gauss average transform. rank must be uneven
-  --tone TONE           tone mask transform. value between 0 and 1
   --sharpen TYPE        sharpen mask transform. available types 1,2,3
   --prewitt TYPE        prewitt mask transform. available types 1,2
   --sobel TYPE          sobel mask transform. available types 1,2
-  --noparallel          disable parallel execution
+  --volterra COEFFICIENT_FILE
+                        quadratic volterra filtering. file must be json
   --custom MASK         custom mask linear filter, json-style format
+  --no-parallel         disable parallel execution
   --output OUTPUT_IMAGE
                         output image filename
 ```
