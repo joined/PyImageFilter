@@ -1,4 +1,4 @@
 Installation
 ============
 
-Sminchio.
+Lorem ipsum.
