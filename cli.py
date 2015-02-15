@@ -4,9 +4,9 @@ import argparse
 import sys
 from PIL import Image
 from random import randrange
-from imagefilter import masks
-from imagefilter.core import ImageFilter
-from imagefilter.clitools import OrderNamespace, CustomArgTypes
+from pyimagefilter import masks
+from pyimagefilter.core import ImageFilter
+from pyimagefilter.clitools import OrderNamespace, CustomArgTypes
 
 if __name__ == "__main__":
     #########################################################
