@@ -5,6 +5,17 @@ import itertools as itt
 from PIL import Image
 
 
+def normalize_component(value):
+    """Normalize component to be in the 0 - 255 range"""
+    if value < 0:
+        return 0
+
+    if value > 255:
+        return 255
+
+    return value
+
+
 # For some reason these 2 functions must be outside the class
 # in order to be pickled (multiprocessing)
 def lin_calc_px(x, y, pixels, half_mask_size, mask):
@@ -28,20 +39,9 @@ def lin_calc_px(x, y, pixels, half_mask_size, mask):
     blue = int(np.dot(subm[...,  2].ravel(),  mask.ravel()))
 
     # Normalize out-of-scale values
-    if red > 255:
-        red = 255
-    elif red < 0:
-        red = 0
-
-    if green > 255:
-        green = 255
-    elif green < 0:
-        green = 0
-
-    if blue > 255:
-        blue = 255
-    elif blue < 0:
-        blue = 0
+    red = normalize_component(red)
+    green = normalize_component(green)
+    blue = normalize_component(blue)
 
     return red, green, blue
 
@@ -87,20 +87,9 @@ def volterra_new_px(x, y, pixels, N, A, B):
     blue = int(A_blue + B_blue)
 
     # Normalize out-of-scale values
-    if red > 255:
-        red = 255
-    elif red < 0:
-        red = 0
-
-    if green > 255:
-        green = 255
-    elif green < 0:
-        green = 0
-
-    if blue > 255:
-        blue = 255
-    elif blue < 0:
-        blue = 0
+    red = normalize_component(red)
+    green = normalize_component(green)
+    blue = normalize_component(blue)
 
     return red, green, blue
 
