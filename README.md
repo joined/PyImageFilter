@@ -4,6 +4,15 @@ This is a personal project, concerning the implementation of an image filtering 
 
 It's written in Python 3.4.
 
+## Installation
+```
+$ git clone https://github.com/joined/pyimagefilter
+$ cd pyimagefilter
+$ virtualenv .env -p $(which python3)
+$ source .env/bin/activate
+$ pip install -r requirements.txt
+```
+
 ## Usage
 
 ```
