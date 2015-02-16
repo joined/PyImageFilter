@@ -31,4 +31,4 @@ optional arguments:
   --no-parallel         disable parallel execution
   --output OUTPUT_IMAGE
                         output image filename
-``
+```
