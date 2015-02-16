@@ -2,4 +2,5 @@ __pycache__/
 .env/
 
 *.pyc
-output_*.jpg
+*.jpg
+*.json
