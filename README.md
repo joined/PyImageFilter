@@ -41,3 +41,7 @@ optional arguments:
   --output OUTPUT_IMAGE
                         output image filename
 ```
+
+## License and Copyright
+
+See `LICENSE`.
